@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <springProperty scope="context" name="LOG_FILE" source="ghost.log-file" defaultValue="src/logs/mcp-server.log"/>
+
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>/Users/erwanletutour/IdeaProjects/ghost-mcp-server/src/logs/mcp-server.log</file>
+        <file>${LOG_FILE}</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>

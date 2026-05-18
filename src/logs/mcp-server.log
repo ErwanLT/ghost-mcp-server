@@ -1,0 +1,35 @@
+2026-05-18 12:44:07.214 [main] INFO  f.e.g.GhostMcpServerApplication - Starting GhostMcpServerApplication using Java 26 with PID 66687 (/Users/erwanletutour/IdeaProjects/ghost-mcp-server/target/classes started by erwanletutour in /Users/erwanletutour/IdeaProjects/ghost-mcp-server)
+2026-05-18 12:44:07.215 [main] DEBUG f.e.g.GhostMcpServerApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2026-05-18 12:44:07.215 [main] INFO  f.e.g.GhostMcpServerApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-18 12:44:07.565 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Enable tools capabilities, notification: true
+2026-05-18 12:44:07.592 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Registered tools: 4
+2026-05-18 12:44:07.592 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Enable resources capabilities, notification: true
+2026-05-18 12:44:07.592 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Enable prompts capabilities, notification: true
+2026-05-18 12:44:07.592 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Enable completions capabilities
+2026-05-18 12:44:07.664 [main] INFO  f.e.g.GhostMcpServerApplication - Started GhostMcpServerApplication in 0.634 seconds (process running for 0.912)
+2026-05-18 12:44:57.145 [main] INFO  f.e.g.GhostMcpServerApplication - Starting GhostMcpServerApplication v0.0.1-SNAPSHOT using Java 25.0.2 with PID 66919 (/Users/erwanletutour/IdeaProjects/ghost-mcp-server/target/ghost-mcp-server-0.0.1-SNAPSHOT.jar started by erwanletutour in /)
+2026-05-18 12:44:57.147 [main] DEBUG f.e.g.GhostMcpServerApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2026-05-18 12:44:57.148 [main] INFO  f.e.g.GhostMcpServerApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-18 12:44:57.824 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Enable tools capabilities, notification: true
+2026-05-18 12:44:57.890 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Registered tools: 4
+2026-05-18 12:44:57.890 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Enable resources capabilities, notification: true
+2026-05-18 12:44:57.891 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Enable prompts capabilities, notification: true
+2026-05-18 12:44:57.891 [main] INFO  o.s.a.m.s.a.McpServerAutoConfiguration - Enable completions capabilities
+2026-05-18 12:44:57.981 [pool-2-thread-1] INFO  i.m.server.McpAsyncServer - Client initialize request - Protocol: 2025-11-25, Capabilities: ClientCapabilities[experimental=null, roots=null, sampling=null], Info: Implementation[name=claude-ai, version=0.1.0]
+2026-05-18 12:44:57.984 [pool-2-thread-1] WARN  i.m.server.McpAsyncServer - Client requested unsupported protocol version: 2025-11-25, so the server will suggest the 2024-11-05 version instead
+2026-05-18 12:44:58.044 [main] INFO  f.e.g.GhostMcpServerApplication - Started GhostMcpServerApplication in 1.146 seconds (process running for 1.511)
+2026-05-18 12:46:00.611 [boundedElastic-1] INFO  f.e.g.service.GhostService - Fetching all posts for author erwan from Admin API
+2026-05-18 12:46:00.612 [boundedElastic-1] INFO  f.e.g.client.GhostAdminApiClient - Fetching posts for author 'erwan' from Ghost Admin API, page 1
+2026-05-18 12:46:00.736 [boundedElastic-1] DEBUG o.s.w.r.f.client.ExchangeFunctions - [5a599974] HTTP GET https://sfeir-dev.ghost.io/ghost/api/admin/posts/?filter=authors:erwan&limit=100&page=1&fields=id,title,slug,status,published_at,url&include=tags,authors
+2026-05-18 12:46:00.873 [boundedElastic-1] ERROR i.n.r.d.DnsServerAddressStreamProviders - Unable to load io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'. Use DEBUG level to see the full stack: java.lang.UnsatisfiedLinkError: failed to load the required native library
+2026-05-18 12:46:01.334 [reactor-http-nio-2] DEBUG o.s.w.r.f.client.ExchangeFunctions - [5a599974] [895ec3c9-1] Response 200 OK
+2026-05-18 12:46:01.384 [boundedElastic-1] INFO  f.e.g.client.GhostAdminApiClient - Fetching posts for author 'erwan' from Ghost Admin API, page 2
+2026-05-18 12:46:01.384 [boundedElastic-1] DEBUG o.s.w.r.f.client.ExchangeFunctions - [2b866fd4] HTTP GET https://sfeir-dev.ghost.io/ghost/api/admin/posts/?filter=authors:erwan&limit=100&page=2&fields=id,title,slug,status,published_at,url&include=tags,authors
+2026-05-18 12:46:01.703 [reactor-http-nio-2] DEBUG o.s.w.r.f.client.ExchangeFunctions - [2b866fd4] [895ec3c9-2] Response 200 OK
+2026-05-18 12:47:47.584 [boundedElastic-1] INFO  f.e.g.service.GhostService - Fetching all posts for author charlotte from Admin API
+2026-05-18 12:47:47.586 [boundedElastic-1] INFO  f.e.g.client.GhostAdminApiClient - Fetching posts for author 'charlotte' from Ghost Admin API, page 1
+2026-05-18 12:47:47.591 [boundedElastic-1] DEBUG o.s.w.r.f.client.ExchangeFunctions - [3da58ada] HTTP GET https://sfeir-dev.ghost.io/ghost/api/admin/posts/?filter=authors:charlotte&limit=100&page=1&fields=id,title,slug,status,published_at,url&include=tags,authors
+2026-05-18 12:47:47.888 [reactor-http-nio-2] DEBUG o.s.w.r.f.client.ExchangeFunctions - [3da58ada] [895ec3c9-3] Response 200 OK
+2026-05-18 12:47:47.910 [boundedElastic-1] INFO  f.e.g.client.GhostAdminApiClient - Fetching posts for author 'charlotte' from Ghost Admin API, page 2
+2026-05-18 12:47:47.911 [boundedElastic-1] DEBUG o.s.w.r.f.client.ExchangeFunctions - [534651f4] HTTP GET https://sfeir-dev.ghost.io/ghost/api/admin/posts/?filter=authors:charlotte&limit=100&page=2&fields=id,title,slug,status,published_at,url&include=tags,authors
+2026-05-18 12:47:48.084 [reactor-http-nio-2] DEBUG o.s.w.r.f.client.ExchangeFunctions - [534651f4] [895ec3c9-4] Response 200 OK

@@ -11,9 +11,19 @@ import org.springframework.context.annotation.Configuration;
 public class McpConfig {
 
     @Bean
-    public ToolCallbackProvider ghostToolsProvider(GhostAdminTools ghostAdminTools, GhostContentTools ghostContentTools) {
-        return MethodToolCallbackProvider.builder()
-                .toolObjects(ghostAdminTools, ghostContentTools)
-                .build();
+    public ToolCallbackProvider ghostToolsProvider(GhostProperties ghostProperties,
+                                                   GhostAdminTools ghostAdminTools,
+                                                   GhostContentTools ghostContentTools) {
+        MethodToolCallbackProvider.Builder builder = MethodToolCallbackProvider.builder();
+
+        if (ghostProperties.hasAdminKey()) {
+            builder.toolObjects(ghostAdminTools);
+        }
+
+        if (ghostProperties.hasContentKey()) {
+            builder.toolObjects(ghostContentTools);
+        }
+
+        return builder.build();
     }
 }

@@ -1,6 +1,7 @@
 package fr.eletutour.ghostmcpserver.client;
 
 import fr.eletutour.ghostmcpserver.configuration.GhostProperties;
+import fr.eletutour.ghostmcpserver.models.PostResponse;
 import fr.eletutour.ghostmcpserver.service.GhostJwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ public class GhostAdminApiClient {
 
     private final WebClient webClient;
     private final GhostJwtService jwtService;
+    private final Integer limit = 100;
 
     public GhostAdminApiClient(GhostProperties ghostProperties,
                                GhostJwtService jwtService) {
@@ -27,63 +29,67 @@ public class GhostAdminApiClient {
                 .build();
     }
 
-    public String getPosts() {
-        log.info("Fetching all recent posts from Ghost API");
+    public PostResponse getPosts(int page) {
+        log.info("Fetching posts from Ghost Admin API, page {}", page);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/posts/")
-                        // Le filtre "authors:erwan" a été supprimé !
-                        .queryParam("limit", "15")
-                        .queryParam("include", "tags,primary_tag")
-                        .queryParam("fields", "id,title,status,slug")
+                        .queryParam("limit", limit)
+                        .queryParam("page", page)
+                        .queryParam("fields", "id,title,slug,status,published_at,url")
+                        .queryParam("include", "tags,authors")
                         .build())
                 .header("Authorization", "Ghost " + jwtService.generateToken())
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(PostResponse.class)
                 .block();
     }
 
-    public String getPostsByAuthor(String author) {
-        log.info("Fetching posts for author '{}' from Ghost API", author);
+    public PostResponse getPostsByAuthor(String author, int page) {
+        log.info("Fetching posts for author '{}' from Ghost Admin API, page {}", author, page);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/posts/")
-                        .queryParam("filter", "authors:" + author) // La variable est injectée ici !
-                        .queryParam("limit", "15")
-                        .queryParam("include", "tags,primary_tag")
-                        .queryParam("fields", "id,title,status,slug")
+                        .queryParam("filter", "authors:" + author)
+                        .queryParam("limit", limit)
+                        .queryParam("page", page)
+                        .queryParam("fields", "id,title,slug,status,published_at,url")
+                        .queryParam("include", "tags,authors")
                         .build())
                 .header("Authorization", "Ghost " + jwtService.generateToken())
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(PostResponse.class)
                 .block();
     }
 
-    public String getPostsByTag(String tag) {
-        log.info("Fetching posts for tag '{}' from Ghost API", tag);
+    public PostResponse getPostsByTag(String tag, int page) {
+        log.info("Fetching posts for tag '{}' from Ghost Admin API, page {}", tag, page);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/posts/")
                         .queryParam("filter", "tag:" + tag)
-                        .queryParam("limit", "15")
-                        .queryParam("fields", "id,title,status,slug") // Limite aussi le payload ici
+                        .queryParam("limit", limit)
+                        .queryParam("page", page)
+                        .queryParam("fields", "id,title,slug,status,published_at,url")
+                        .queryParam("include", "tags,authors")
                         .build())
                 .header("Authorization", "Ghost " + jwtService.generateToken())
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(PostResponse.class)
                 .block();
     }
 
-    public String getPostBySlug(String slug) {
-        log.info("Fetching post for slug '{}' from Ghost API", slug);
+    public PostResponse getPostBySlug(String slug) {
+        log.info("Fetching post for slug '{}' from Ghost Admin API", slug);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/posts/slug/" + slug + "/")
-                        .queryParam("formats", "html,plaintext") // Demande du format propre plutôt que du mobiledoc brut
+                        .queryParam("formats", "html,plaintext")
+                        .queryParam("include", "tags,authors")
                         .build())
                 .header("Authorization", "Ghost " + jwtService.generateToken())
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(PostResponse.class)
                 .block();
     }
 }
