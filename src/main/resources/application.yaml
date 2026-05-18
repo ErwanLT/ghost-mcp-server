@@ -12,7 +12,7 @@ spring:
         version: "1.0.0"
 
 ghost:
-  url: https://sfeir-dev.ghost.io
+  url: ${GHOST_URL}
   admin-api-key: ${GHOST_ADMIN_API_KEY}
   content-api-key: ${GHOST_CONTENT_API_KEY}
   log-file: ${GHOST_LOG_FILE:src/logs/mcp-server.log}

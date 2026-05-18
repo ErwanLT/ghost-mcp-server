@@ -39,6 +39,7 @@ Pour utiliser ce serveur avec Claude Desktop, ajoutez la configuration suivante 
         "[CHEMIN_VERS_VOTRE_PROJET]/target/ghost-mcp-server-0.0.1-SNAPSHOT.jar"
       ],
       "env": {
+        "GHOST_URL": "https://votre-site.ghost.io",
         "GHOST_ADMIN_API_KEY": "VOTRE_ADMIN_API_KEY",
         "GHOST_CONTENT_API_KEY": "VOTRE_CONTENT_API_KEY",
         "GHOST_LOG_FILE": "[CHEMIN_VERS_VOTRE_PROJET]/src/logs/mcp-server.log"
@@ -50,6 +51,7 @@ Pour utiliser ce serveur avec Claude Desktop, ajoutez la configuration suivante 
 
 ### Variables d'environnement
 
+- `GHOST_URL` : L'URL de votre instance Ghost (ex: `https://mon-blog.ghost.io`).
 - `GHOST_ADMIN_API_KEY` : Votre clé API Admin (facultatif, active les outils Admin).
 - `GHOST_CONTENT_API_KEY` : Votre clé API Content (facultatif, active les outils Content).
 - `GHOST_LOG_FILE` : Chemin vers le fichier de log (facultatif, défaut: `src/logs/mcp-server.log`).
