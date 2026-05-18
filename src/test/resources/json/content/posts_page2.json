@@ -1,0 +1,22 @@
+{
+    "posts": [
+        {
+            "id": "2",
+            "title": "Post 2",
+            "slug": "post-2",
+            "status": "published",
+            "published_at": "2026-05-18T11:00:00.000Z",
+            "url": "https://ghost.io/post-2/"
+        }
+    ],
+    "meta": {
+        "pagination": {
+            "page": 2,
+            "limit": 1,
+            "pages": 2,
+            "total": 2,
+            "next": null,
+            "prev": 1
+        }
+    }
+}

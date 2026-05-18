@@ -1,0 +1,12 @@
+{
+    "posts": [
+        {
+            "id": "1",
+            "title": "Full Post",
+            "slug": "full-post",
+            "html": "<p>Content</p>",
+            "authors": [{"id": "a1", "name": "Author 1"}],
+            "tags": [{"id": "t1", "name": "Tag 1"}]
+        }
+    ]
+}
