@@ -24,8 +24,8 @@ jobs:
         java-version: '25'
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: ${{ github.repository_owner }}
-        server-password: ${{ secrets.GITHUB_TOKEN }}
+        server-username: GITHUB_ACTOR
+        server-password: GITHUB_TOKEN
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Build with Maven
@@ -34,4 +34,5 @@ jobs:
     - name: Publish to GitHub Packages Apache Maven
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_ACTOR: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
