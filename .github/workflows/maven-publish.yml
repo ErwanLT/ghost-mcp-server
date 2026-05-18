@@ -24,7 +24,7 @@ jobs:
         java-version: '25'
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: ${{ github.actor }}
+        server-username: ${{ github.repository_owner }}
         server-password: ${{ secrets.GITHUB_TOKEN }}
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
