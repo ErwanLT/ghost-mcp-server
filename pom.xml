@@ -97,4 +97,12 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub ErwanLT Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/ErwanLT/ghost-mcp-server</url>
+        </repository>
+    </distributionManagement>
+
 </project>
