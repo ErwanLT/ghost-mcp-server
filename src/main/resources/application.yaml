@@ -1,3 +1,17 @@
 spring:
   application:
     name: ghost-mcp-server
+  main:
+    banner-mode: off
+    web-application-type: none
+  ai:
+    mcp:
+      server:
+        enabled: true
+        name: "ghost-mcp-server"
+        version: "1.0.0"
+
+ghost:
+  url: https://sfeir-dev.ghost.io
+  admin-api-key: ${GHOST_ADMIN_API_KEY}
+  content-api-key: ${GHOST_CONTENT_API_KEY}
