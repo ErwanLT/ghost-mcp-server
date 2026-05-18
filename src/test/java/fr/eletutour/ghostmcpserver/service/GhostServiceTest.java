@@ -104,4 +104,14 @@ class GhostServiceTest {
         assertThat(result).hasSize(1).containsExactly(post);
         verify(adminApiClient).getPostsByAuthor("erwan", 1);
     }
+
+    @Test
+    void getAllContentPosts_ShouldHandleNullResponseGracefully() {
+        when(contentApiClient.getPosts(1)).thenReturn(null);
+
+        List<Post> result = ghostService.getAllContentPosts();
+
+        assertThat(result).isEmpty();
+        verify(contentApiClient, times(1)).getPosts(1);
+    }
 }
