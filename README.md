@@ -77,11 +77,13 @@ sequenceDiagram
 mvn clean package
 ```
 
-Le fichier JAR sera généré dans `target/ghost-mcp-server-0.0.1-SNAPSHOT.jar`.
+Le fichier JAR sera généré dans le dossier `target/`. Vous pouvez aussi utiliser le JAR publié dans GitHub Packages lors d'une release.
 
 ## ⚙️ Configuration Claude Desktop
 
-Ajoutez cette configuration à votre fichier `claude_desktop_config.json` (souvent situé dans `~/Library/Application Support/Claude/` sur macOS) :
+Ajoutez cette configuration à votre fichier `claude_desktop_config.json` (souvent situé dans `~/Library/Application Support/Claude/` sur macOS).
+
+Le chemin passé à `-jar` doit simplement pointer vers le fichier JAR que vous souhaitez exécuter, qu'il provienne d'un build local ou du package publié. Le fichier de logs peut être placé où vous le souhaitez, tant que le processus Java peut y écrire.
 
 ```json
 {
@@ -92,13 +94,13 @@ Ajoutez cette configuration à votre fichier `claude_desktop_config.json` (souve
         "-Dio.netty.noUnsafe=true",
         "--enable-native-access=ALL-UNNAMED",
         "-jar",
-        "[CHEMIN_VERS_VOTRE_PROJET]/target/ghost-mcp-server-0.0.1-SNAPSHOT.jar"
+        "/chemin/vers/ghost-mcp-server.jar"
       ],
       "env": {
         "GHOST_URL": "https://votre-blog.ghost.io",
         "GHOST_ADMIN_API_KEY": "VOTRE_ADMIN_API_KEY",
         "GHOST_CONTENT_API_KEY": "VOTRE_CONTENT_API_KEY",
-        "GHOST_LOG_FILE": "[CHEMIN_VERS_VOTRE_PROJET]/src/logs/mcp-server.log"
+        "GHOST_LOG_FILE": "/chemin/vers/mcp-server.log"
       }
     }
   }
