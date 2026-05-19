@@ -18,13 +18,19 @@
         <license/>
     </licenses>
     <developers>
-        <developer/>
+        <developer>
+            <id>1</id>
+            <name>LE TUTOUR Erwan</name>
+            <roles>
+                <role>OWNER</role>
+            </roles>
+        </developer>
     </developers>
     <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
+        <url>https://github.com/ErwanLT/ghost-mcp-server.git</url>
+        <connection>scm:git:ssh://git@github.com/ErwanLT/ghost-mcp-server.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/ErwanLT/ghost-mcp-server.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
     <properties>
         <java.version>25</java.version>
@@ -97,6 +103,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
             </plugin>
         </plugins>
     </build>
