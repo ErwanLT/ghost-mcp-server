@@ -1,5 +1,8 @@
 # Ghost MCP Server
 
+[![Java CI with Maven](https://github.com/ErwanLT/ghost-mcp-server/actions/workflows/maven.yml/badge.svg)](https://github.com/ErwanLT/ghost-mcp-server/actions/workflows/maven.yml)
+
+
 [![Java Version](https://img.shields.io/badge/Java-25-orange.svg)](https://www.oracle.com/java/technologies/javase/jdk25-archive-downloads.html)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![MCP](https://img.shields.io/badge/MCP-1.0.0-blue.svg)](https://modelcontextprotocol.io)
