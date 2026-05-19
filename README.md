@@ -15,6 +15,8 @@ Un serveur **Model Context Protocol (MCP)** robuste et performant permettant aux
 - 📑 **Pagination Intelligente** : Gestion transparente de la pagination Ghost pour garantir des résultats complets.
 - 🔒 **Sécurité** : Authentification via JWT pour l'API Admin et gestion sécurisée des clés via variables d'environnement.
 - 🛠️ **Modulaire** : Activation conditionnelle des outils en fonction des clés API fournies.
+- ✅ **Configuration validée** : Contrôle de l'URL Ghost, des clés API et du format de clé Admin au démarrage.
+- 🧯 **Erreurs lisibles** : Gestion explicite des erreurs HTTP, timeouts, rate limits et réponses trop volumineuses.
 - 📚 **Richesse des données** : Inclusion systématique des tags et auteurs pour un contexte maximal.
 
 ## 🏗️ Architecture & Structure
@@ -108,9 +110,11 @@ Ajoutez cette configuration à votre fichier `claude_desktop_config.json` (souve
 | Variable | Description | Obligatoire |
 | :--- | :--- | :--- |
 | `GHOST_URL` | URL de base de votre instance Ghost. | **Oui** |
-| `GHOST_ADMIN_API_KEY` | Clé API Admin (Format `id:secret`). Active les outils Admin. | Non |
+| `GHOST_ADMIN_API_KEY` | Clé API Admin (Format `id:secretHexadecimal`). Active les outils Admin. | Non |
 | `GHOST_CONTENT_API_KEY` | Clé API Content. Active les outils Content. | Non |
 | `GHOST_LOG_FILE` | Chemin complet pour le fichier de logs. | Non |
+
+Au moins une clé API (`GHOST_ADMIN_API_KEY` ou `GHOST_CONTENT_API_KEY`) doit être fournie pour exposer des outils MCP.
 
 ## 🛠️ Outils Disponibles
 
@@ -139,8 +143,20 @@ Le projet inclut une suite de tests unitaires et d'intégration utilisant `MockW
 mvn test
 ```
 
+## 📦 Release
+
+Le projet utilise le `maven-release-plugin` pour préparer les versions et créer les tags Git.
+
+```bash
+mvn release:prepare
+```
+
+Le tag créé suit le format `vX.Y.Z` (par exemple `v2.0.0`). La GitHub Release est ensuite créée manuellement à partir du tag ; le workflow GitHub Actions publie alors automatiquement le package Maven dans GitHub Packages.
+
 ## 🔍 Troubleshooting
 
 - **Logs** : Consultez le fichier défini dans `GHOST_LOG_FILE` pour diagnostiquer les erreurs de connexion.
-- **Authentification** : Si les outils Admin échouent, vérifiez que votre `GHOST_ADMIN_API_KEY` respecte bien le format `id:secret`.
+- **Authentification** : Si les outils Admin échouent, vérifiez que votre `GHOST_ADMIN_API_KEY` respecte bien le format `id:secretHexadecimal`.
+- **Rate limit** : En cas de limite API Ghost atteinte, le serveur retourne une erreur explicite invitant à réessayer plus tard.
+- **Timeout** : Les appels Ghost sont limités dans le temps afin d'éviter qu'un outil MCP reste bloqué indéfiniment.
 - **Mémoire** : En cas de très gros volumes de données, le `maxInMemorySize` du WebClient est configuré à 2MB par défaut.
