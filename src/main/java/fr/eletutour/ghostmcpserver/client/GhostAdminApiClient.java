@@ -31,65 +31,85 @@ public class GhostAdminApiClient {
 
     public PostResponse getPosts(int page) {
         log.info("Fetching posts from Ghost Admin API, page {}", page);
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/posts/")
-                        .queryParam("limit", limit)
-                        .queryParam("page", page)
-                        .queryParam("fields", "id,title,slug,status,published_at,url")
-                        .queryParam("include", "tags,authors")
-                        .build())
-                .header("Authorization", "Ghost " + jwtService.generateToken())
-                .retrieve()
-                .bodyToMono(PostResponse.class)
-                .block();
+        String operation = "fetch admin posts page %d".formatted(page);
+        return GhostApiClientSupport.execute(
+                GhostApiClientSupport.retrieve(webClient.get()
+                                .uri(uriBuilder -> uriBuilder
+                                        .path("/posts/")
+                                        .queryParam("limit", limit)
+                                        .queryParam("page", page)
+                                        .queryParam("fields", "id,title,slug,status,published_at,url")
+                                        .queryParam("include", "tags,authors")
+                                        .build())
+                                .header("Authorization", "Ghost " + jwtService.generateToken()),
+                        "Ghost Admin API",
+                        operation)
+                        .bodyToMono(PostResponse.class),
+                "Ghost Admin API",
+                operation
+        );
     }
 
     public PostResponse getPostsByAuthor(String author, int page) {
         log.info("Fetching posts for author '{}' from Ghost Admin API, page {}", author, page);
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/posts/")
-                        .queryParam("filter", "authors:" + author)
-                        .queryParam("limit", limit)
-                        .queryParam("page", page)
-                        .queryParam("fields", "id,title,slug,status,published_at,url")
-                        .queryParam("include", "tags,authors")
-                        .build())
-                .header("Authorization", "Ghost " + jwtService.generateToken())
-                .retrieve()
-                .bodyToMono(PostResponse.class)
-                .block();
+        String operation = "fetch admin posts for author '%s' page %d".formatted(author, page);
+        return GhostApiClientSupport.execute(
+                GhostApiClientSupport.retrieve(webClient.get()
+                                .uri(uriBuilder -> uriBuilder
+                                        .path("/posts/")
+                                        .queryParam("filter", "authors:" + author)
+                                        .queryParam("limit", limit)
+                                        .queryParam("page", page)
+                                        .queryParam("fields", "id,title,slug,status,published_at,url")
+                                        .queryParam("include", "tags,authors")
+                                        .build())
+                                .header("Authorization", "Ghost " + jwtService.generateToken()),
+                        "Ghost Admin API",
+                        operation)
+                        .bodyToMono(PostResponse.class),
+                "Ghost Admin API",
+                operation
+        );
     }
 
     public PostResponse getPostsByTag(String tag, int page) {
         log.info("Fetching posts for tag '{}' from Ghost Admin API, page {}", tag, page);
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/posts/")
-                        .queryParam("filter", "tag:" + tag)
-                        .queryParam("limit", limit)
-                        .queryParam("page", page)
-                        .queryParam("fields", "id,title,slug,status,published_at,url")
-                        .queryParam("include", "tags,authors")
-                        .build())
-                .header("Authorization", "Ghost " + jwtService.generateToken())
-                .retrieve()
-                .bodyToMono(PostResponse.class)
-                .block();
+        String operation = "fetch admin posts for tag '%s' page %d".formatted(tag, page);
+        return GhostApiClientSupport.execute(
+                GhostApiClientSupport.retrieve(webClient.get()
+                                .uri(uriBuilder -> uriBuilder
+                                        .path("/posts/")
+                                        .queryParam("filter", "tag:" + tag)
+                                        .queryParam("limit", limit)
+                                        .queryParam("page", page)
+                                        .queryParam("fields", "id,title,slug,status,published_at,url")
+                                        .queryParam("include", "tags,authors")
+                                        .build())
+                                .header("Authorization", "Ghost " + jwtService.generateToken()),
+                        "Ghost Admin API",
+                        operation)
+                        .bodyToMono(PostResponse.class),
+                "Ghost Admin API",
+                operation
+        );
     }
 
     public PostResponse getPostBySlug(String slug) {
         log.info("Fetching post for slug '{}' from Ghost Admin API", slug);
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/posts/slug/" + slug + "/")
-                        .queryParam("formats", "html,plaintext")
-                        .queryParam("include", "tags,authors")
-                        .build())
-                .header("Authorization", "Ghost " + jwtService.generateToken())
-                .retrieve()
-                .bodyToMono(PostResponse.class)
-                .block();
+        String operation = "fetch admin post by slug '%s'".formatted(slug);
+        return GhostApiClientSupport.execute(
+                GhostApiClientSupport.retrieve(webClient.get()
+                                .uri(uriBuilder -> uriBuilder
+                                        .path("/posts/slug/{slug}/")
+                                        .queryParam("formats", "html,plaintext")
+                                        .queryParam("include", "tags,authors")
+                                        .build(slug))
+                                .header("Authorization", "Ghost " + jwtService.generateToken()),
+                        "Ghost Admin API",
+                        operation)
+                        .bodyToMono(PostResponse.class),
+                "Ghost Admin API",
+                operation
+        );
     }
 }
