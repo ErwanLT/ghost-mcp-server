@@ -1,5 +1,6 @@
 package fr.eletutour.ghostmcpserver.tools;
 
+import fr.eletutour.ghostmcpserver.models.AuthorReference;
 import fr.eletutour.ghostmcpserver.models.Post;
 import fr.eletutour.ghostmcpserver.models.PostInput;
 import fr.eletutour.ghostmcpserver.service.GhostService;
@@ -47,24 +48,26 @@ class GhostAdminToolsTest {
 
     @Test
     void createAdminPost_ShouldMapParametersToInput() {
-        adminTools.createAdminPost("Titre", "<p>x</p>", "scheduled", List.of("Java"), "extrait",
+        adminTools.createAdminPost("Titre", "<p>x</p>", "scheduled", List.of("Java"),
+                List.of("erwan@example.com", "5c739b7c8a59a6c8ddc164a1"), "extrait",
                 null, true, null, null, "2026-10-10T09:00:00Z");
 
         verify(ghostService).createAdminPost(new PostInput("Titre", "<p>x</p>", "scheduled", List.of("Java"),
+                List.of(new AuthorReference(null, "erwan@example.com"), new AuthorReference("5c739b7c8a59a6c8ddc164a1", null)),
                 "extrait", null, true, null, null, OffsetDateTime.parse("2026-10-10T09:00:00Z"), null));
     }
 
     @Test
     void updateAdminPost_ShouldMapParametersToInput() {
-        adminTools.updateAdminPost("abc", "Nouveau", null, null, null, null, null, null, null, null, null);
+        adminTools.updateAdminPost("abc", "Nouveau", null, null, null, null, null, null, null, null, null, null);
 
-        verify(ghostService).updateAdminPost(eq("abc"), eq(new PostInput("Nouveau", null, null, null,
+        verify(ghostService).updateAdminPost(eq("abc"), eq(new PostInput("Nouveau", null, null, null, null,
                 null, null, null, null, null, null, null)));
     }
 
     @Test
     void createAdminPost_ShouldRejectInvalidDate() {
-        assertThatThrownBy(() -> adminTools.createAdminPost("Titre", null, "scheduled", null, null,
+        assertThatThrownBy(() -> adminTools.createAdminPost("Titre", null, "scheduled", null, null, null,
                 null, null, null, null, "demain"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("demain");

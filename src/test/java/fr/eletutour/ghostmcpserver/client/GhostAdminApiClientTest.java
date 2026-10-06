@@ -1,6 +1,7 @@
 package fr.eletutour.ghostmcpserver.client;
 
 import fr.eletutour.ghostmcpserver.configuration.GhostProperties;
+import fr.eletutour.ghostmcpserver.models.AuthorReference;
 import fr.eletutour.ghostmcpserver.models.PostInput;
 import fr.eletutour.ghostmcpserver.models.PostResponse;
 import fr.eletutour.ghostmcpserver.service.GhostJwtService;
@@ -108,6 +109,7 @@ class GhostAdminApiClientTest {
                 .addHeader("Content-Type", "application/json"));
 
         PostInput input = new PostInput("Mon article", "<p>Contenu</p>", "draft", List.of("Java", "Spring"),
+                List.of(new AuthorReference(null, "erwan@example.com"), new AuthorReference("5c739b7c8a59a6c8ddc164a1", null)),
                 null, null, null, null, null, null, null);
         PostResponse response = apiClient.createPost(input);
 
@@ -116,7 +118,8 @@ class GhostAdminApiClientTest {
         assertThat(request.getPath()).startsWith("/ghost/api/admin/posts/?").contains("source=html");
         assertThat(request.getHeader("Authorization")).isEqualTo("Ghost mock-token");
         assertThat(request.getBody().readUtf8()).isEqualTo(
-                "{\"posts\":[{\"title\":\"Mon article\",\"html\":\"<p>Contenu</p>\",\"status\":\"draft\",\"tags\":[\"Java\",\"Spring\"]}]}");
+                "{\"posts\":[{\"title\":\"Mon article\",\"html\":\"<p>Contenu</p>\",\"status\":\"draft\",\"tags\":[\"Java\",\"Spring\"],"
+                        + "\"authors\":[{\"email\":\"erwan@example.com\"},{\"id\":\"5c739b7c8a59a6c8ddc164a1\"}]}]}");
         assertThat(response.posts()).isNotEmpty();
     }
 
@@ -126,7 +129,7 @@ class GhostAdminApiClientTest {
                 .setBody(loadPostsJson())
                 .addHeader("Content-Type", "application/json"));
 
-        PostInput input = new PostInput("Nouveau titre", null, null, null, null, null, null, null, null, null,
+        PostInput input = new PostInput("Nouveau titre", null, null, null, null, null, null, null, null, null, null,
                 OffsetDateTime.parse("2026-10-01T10:00:00Z"));
         apiClient.updatePost("abc123", input);
 
@@ -145,7 +148,7 @@ class GhostAdminApiClientTest {
                 .setBody(loadPostsJson())
                 .addHeader("Content-Type", "application/json"));
 
-        PostInput input = new PostInput(null, "<p>Nouveau</p>", null, null, null, null, null, null, null, null,
+        PostInput input = new PostInput(null, "<p>Nouveau</p>", null, null, null, null, null, null, null, null, null,
                 OffsetDateTime.parse("2026-10-01T10:00:00Z"));
         apiClient.updatePost("abc123", input);
 
@@ -159,7 +162,7 @@ class GhostAdminApiClientTest {
                 .setBody("{\"errors\":[{\"type\":\"UpdateCollisionError\"}]}")
                 .addHeader("Content-Type", "application/json"));
 
-        PostInput input = new PostInput("Titre", null, null, null, null, null, null, null, null, null,
+        PostInput input = new PostInput("Titre", null, null, null, null, null, null, null, null, null, null,
                 OffsetDateTime.parse("2026-10-01T10:00:00Z"));
 
         assertThatThrownBy(() -> apiClient.updatePost("abc123", input))

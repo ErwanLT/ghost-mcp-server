@@ -125,7 +125,7 @@ class GhostServiceTest {
         Post created = mock(Post.class);
         when(adminApiClient.createPost(any())).thenReturn(new PostResponse(List.of(created), null));
 
-        Post result = ghostService.createAdminPost(new PostInput("Titre", "<p>x</p>", null, null,
+        Post result = ghostService.createAdminPost(new PostInput("Titre", "<p>x</p>", null, null, null,
                 null, null, null, null, null, null, null));
 
         assertThat(result).isEqualTo(created);
@@ -135,7 +135,7 @@ class GhostServiceTest {
 
     @Test
     void createAdminPost_ShouldRejectMissingTitle() {
-        assertThatThrownBy(() -> ghostService.createAdminPost(new PostInput(" ", null, null, null,
+        assertThatThrownBy(() -> ghostService.createAdminPost(new PostInput(" ", null, null, null, null,
                 null, null, null, null, null, null, null)))
                 .isInstanceOf(IllegalArgumentException.class);
         verifyNoInteractions(adminApiClient);
@@ -143,7 +143,7 @@ class GhostServiceTest {
 
     @Test
     void createAdminPost_ShouldRejectScheduledWithoutDate() {
-        assertThatThrownBy(() -> ghostService.createAdminPost(new PostInput("Titre", null, "scheduled", null,
+        assertThatThrownBy(() -> ghostService.createAdminPost(new PostInput("Titre", null, "scheduled", null, null,
                 null, null, null, null, null, null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("publishedAt");
@@ -152,7 +152,7 @@ class GhostServiceTest {
 
     @Test
     void createAdminPost_ShouldRejectUnknownStatus() {
-        assertThatThrownBy(() -> ghostService.createAdminPost(new PostInput("Titre", null, "online", null,
+        assertThatThrownBy(() -> ghostService.createAdminPost(new PostInput("Titre", null, "online", null, null,
                 null, null, null, null, null, null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("online");
@@ -167,7 +167,7 @@ class GhostServiceTest {
         Post updated = mock(Post.class);
         when(adminApiClient.updatePost(eq("abc"), any())).thenReturn(new PostResponse(List.of(updated), null));
 
-        Post result = ghostService.updateAdminPost("abc", new PostInput("Nouveau", null, null, null,
+        Post result = ghostService.updateAdminPost("abc", new PostInput("Nouveau", null, null, null, null,
                 null, null, null, null, null, null, null));
 
         assertThat(result).isEqualTo(updated);
@@ -177,7 +177,7 @@ class GhostServiceTest {
 
     @Test
     void updateAdminPost_ShouldRejectEmptyChanges() {
-        assertThatThrownBy(() -> ghostService.updateAdminPost("abc", new PostInput(null, null, null, null,
+        assertThatThrownBy(() -> ghostService.updateAdminPost("abc", new PostInput(null, null, null, null, null,
                 null, null, null, null, null, null, null)))
                 .isInstanceOf(IllegalArgumentException.class);
         verifyNoInteractions(adminApiClient);
@@ -187,7 +187,7 @@ class GhostServiceTest {
     void updateAdminPost_ShouldFailWhenPostNotFound() {
         when(adminApiClient.getPostById("missing")).thenReturn(new PostResponse(List.of(), null));
 
-        assertThatThrownBy(() -> ghostService.updateAdminPost("missing", new PostInput("Titre", null, null, null,
+        assertThatThrownBy(() -> ghostService.updateAdminPost("missing", new PostInput("Titre", null, null, null, null,
                 null, null, null, null, null, null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("missing");

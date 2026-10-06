@@ -17,6 +17,7 @@ public record PostInput(
         String html,
         String status,
         List<String> tags,
+        List<AuthorReference> authors,
 
         @JsonProperty("custom_excerpt")
         String customExcerpt,
@@ -41,7 +42,7 @@ public record PostInput(
         OffsetDateTime updatedAt
 ) {
     public PostInput withUpdatedAt(OffsetDateTime updatedAt) {
-        return new PostInput(title, html, status, tags, customExcerpt, featureImage, featured,
+        return new PostInput(title, html, status, tags, authors, customExcerpt, featureImage, featured,
                 metaTitle, metaDescription, publishedAt, updatedAt);
     }
 }

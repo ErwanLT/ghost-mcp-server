@@ -160,7 +160,7 @@ public class GhostService {
             throw new IllegalArgumentException("Le titre est obligatoire pour créer un article.");
         }
         PostInput toCreate = post.status() == null
-                ? new PostInput(post.title(), post.html(), "draft", post.tags(), post.customExcerpt(),
+                ? new PostInput(post.title(), post.html(), "draft", post.tags(), post.authors(), post.customExcerpt(),
                 post.featureImage(), post.featured(), post.metaTitle(), post.metaDescription(),
                 post.publishedAt(), null)
                 : post;
@@ -207,7 +207,7 @@ public class GhostService {
 
     private static boolean isEmpty(PostInput post) {
         return post == null || (post.title() == null && post.html() == null && post.status() == null
-                && post.tags() == null && post.customExcerpt() == null && post.featureImage() == null
+                && post.tags() == null && post.authors() == null && post.customExcerpt() == null && post.featureImage() == null
                 && post.featured() == null && post.metaTitle() == null && post.metaDescription() == null
                 && post.publishedAt() == null);
     }
