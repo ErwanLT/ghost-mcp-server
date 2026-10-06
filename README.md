@@ -136,6 +136,8 @@ Au moins une clé API (`GHOST_ADMIN_API_KEY` ou `GHOST_CONTENT_API_KEY`) doit ê
 - `findAdminPostsByAuthor(author)` : Filtre les articles par auteur.
 - `findAdminPostsByTag(tag)` : Filtre les articles par tag.
 - `getAdminPostBySlug(slug)` : Détails complets incluant les métadonnées administratives.
+- `createAdminPost(title, html, status, tags, ...)` : Crée un article à partir de HTML (brouillon par défaut, `published` ou `scheduled` avec `publishedAt`).
+- `updateAdminPost(id, title, html, status, tags, ...)` : Met à jour partiellement un article ; le `updated_at` requis par Ghost est récupéré automatiquement. ⚠️ La liste de tags fournie remplace les tags existants.
 
 ## 🧪 Tests
 

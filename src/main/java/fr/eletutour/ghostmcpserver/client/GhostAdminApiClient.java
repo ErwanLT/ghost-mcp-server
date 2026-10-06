@@ -1,6 +1,8 @@
 package fr.eletutour.ghostmcpserver.client;
 
 import fr.eletutour.ghostmcpserver.configuration.GhostProperties;
+import fr.eletutour.ghostmcpserver.models.PostInput;
+import fr.eletutour.ghostmcpserver.models.PostInputRequest;
 import fr.eletutour.ghostmcpserver.models.PostResponse;
 import fr.eletutour.ghostmcpserver.service.GhostJwtService;
 import org.slf4j.Logger;
@@ -105,6 +107,70 @@ public class GhostAdminApiClient {
                                         .queryParam("include", "tags,authors")
                                         .build(slug))
                                 .header("Authorization", "Ghost " + jwtService.generateToken()),
+                        "Ghost Admin API",
+                        operation)
+                        .bodyToMono(PostResponse.class),
+                "Ghost Admin API",
+                operation
+        );
+    }
+
+    public PostResponse getPostById(String id) {
+        log.info("Fetching post for id '{}' from Ghost Admin API", id);
+        String operation = "fetch admin post by id '%s'".formatted(id);
+        return GhostApiClientSupport.execute(
+                GhostApiClientSupport.retrieve(webClient.get()
+                                .uri(uriBuilder -> uriBuilder
+                                        .path("/posts/{id}/")
+                                        .queryParam("formats", "html,plaintext")
+                                        .queryParam("include", "tags,authors")
+                                        .build(id))
+                                .header("Authorization", "Ghost " + jwtService.generateToken()),
+                        "Ghost Admin API",
+                        operation)
+                        .bodyToMono(PostResponse.class),
+                "Ghost Admin API",
+                operation
+        );
+    }
+
+    public PostResponse createPost(PostInput post) {
+        log.info("Creating post '{}' with Ghost Admin API", post.title());
+        String operation = "create admin post '%s'".formatted(post.title());
+        return GhostApiClientSupport.execute(
+                GhostApiClientSupport.retrieve(webClient.post()
+                                .uri(uriBuilder -> uriBuilder
+                                        .path("/posts/")
+                                        .queryParam("source", "html")
+                                        .queryParam("formats", "html")
+                                        .queryParam("include", "tags,authors")
+                                        .build())
+                                .header("Authorization", "Ghost " + jwtService.generateToken())
+                                .bodyValue(PostInputRequest.of(post)),
+                        "Ghost Admin API",
+                        operation)
+                        .bodyToMono(PostResponse.class),
+                "Ghost Admin API",
+                operation
+        );
+    }
+
+    public PostResponse updatePost(String id, PostInput post) {
+        log.info("Updating post '{}' with Ghost Admin API", id);
+        String operation = "update admin post '%s'".formatted(id);
+        return GhostApiClientSupport.execute(
+                GhostApiClientSupport.retrieve(webClient.put()
+                                .uri(uriBuilder -> {
+                                    uriBuilder.path("/posts/{id}/")
+                                            .queryParam("formats", "html")
+                                            .queryParam("include", "tags,authors");
+                                    if (post.html() != null) {
+                                        uriBuilder.queryParam("source", "html");
+                                    }
+                                    return uriBuilder.build(id);
+                                })
+                                .header("Authorization", "Ghost " + jwtService.generateToken())
+                                .bodyValue(PostInputRequest.of(post)),
                         "Ghost Admin API",
                         operation)
                         .bodyToMono(PostResponse.class),

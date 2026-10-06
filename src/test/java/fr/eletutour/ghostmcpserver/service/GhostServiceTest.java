@@ -9,10 +9,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -113,5 +118,79 @@ class GhostServiceTest {
 
         assertThat(result).isEmpty();
         verify(contentApiClient, times(1)).getPosts(1);
+    }
+
+    @Test
+    void createAdminPost_ShouldDefaultToDraft() {
+        Post created = mock(Post.class);
+        when(adminApiClient.createPost(any())).thenReturn(new PostResponse(List.of(created), null));
+
+        Post result = ghostService.createAdminPost(new PostInput("Titre", "<p>x</p>", null, null,
+                null, null, null, null, null, null, null));
+
+        assertThat(result).isEqualTo(created);
+        verify(adminApiClient).createPost(argThat(input -> "draft".equals(input.status())
+                && "Titre".equals(input.title())));
+    }
+
+    @Test
+    void createAdminPost_ShouldRejectMissingTitle() {
+        assertThatThrownBy(() -> ghostService.createAdminPost(new PostInput(" ", null, null, null,
+                null, null, null, null, null, null, null)))
+                .isInstanceOf(IllegalArgumentException.class);
+        verifyNoInteractions(adminApiClient);
+    }
+
+    @Test
+    void createAdminPost_ShouldRejectScheduledWithoutDate() {
+        assertThatThrownBy(() -> ghostService.createAdminPost(new PostInput("Titre", null, "scheduled", null,
+                null, null, null, null, null, null, null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("publishedAt");
+        verifyNoInteractions(adminApiClient);
+    }
+
+    @Test
+    void createAdminPost_ShouldRejectUnknownStatus() {
+        assertThatThrownBy(() -> ghostService.createAdminPost(new PostInput("Titre", null, "online", null,
+                null, null, null, null, null, null, null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("online");
+    }
+
+    @Test
+    void updateAdminPost_ShouldSendCurrentUpdatedAt() {
+        OffsetDateTime updatedAt = OffsetDateTime.parse("2026-10-01T10:00:00Z");
+        Post current = mock(Post.class);
+        when(current.updatedAt()).thenReturn(updatedAt);
+        when(adminApiClient.getPostById("abc")).thenReturn(new PostResponse(List.of(current), null));
+        Post updated = mock(Post.class);
+        when(adminApiClient.updatePost(eq("abc"), any())).thenReturn(new PostResponse(List.of(updated), null));
+
+        Post result = ghostService.updateAdminPost("abc", new PostInput("Nouveau", null, null, null,
+                null, null, null, null, null, null, null));
+
+        assertThat(result).isEqualTo(updated);
+        verify(adminApiClient).updatePost(eq("abc"), argThat(input -> updatedAt.equals(input.updatedAt())
+                && "Nouveau".equals(input.title())));
+    }
+
+    @Test
+    void updateAdminPost_ShouldRejectEmptyChanges() {
+        assertThatThrownBy(() -> ghostService.updateAdminPost("abc", new PostInput(null, null, null, null,
+                null, null, null, null, null, null, null)))
+                .isInstanceOf(IllegalArgumentException.class);
+        verifyNoInteractions(adminApiClient);
+    }
+
+    @Test
+    void updateAdminPost_ShouldFailWhenPostNotFound() {
+        when(adminApiClient.getPostById("missing")).thenReturn(new PostResponse(List.of(), null));
+
+        assertThatThrownBy(() -> ghostService.updateAdminPost("missing", new PostInput("Titre", null, null, null,
+                null, null, null, null, null, null, null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("missing");
+        verify(adminApiClient, never()).updatePost(any(), any());
     }
 }

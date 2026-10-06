@@ -11,6 +11,8 @@ public record Post(
         String uuid,
         String title,
         String html,
+        String status,
+        String visibility,
 
         @JsonProperty("comment_id")
         String commentId,

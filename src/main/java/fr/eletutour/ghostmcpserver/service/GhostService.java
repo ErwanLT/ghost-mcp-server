@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 public class GhostService {
 
     private static final Logger log = LoggerFactory.getLogger(GhostService.class);
+    private static final List<String> ALLOWED_STATUSES = List.of("draft", "published", "scheduled");
 
     private final GhostAdminApiClient adminApiClient;
     private final GhostContentApiClient contentApiClient;
@@ -129,6 +131,7 @@ public class GhostService {
                 currentPage++;
             }
         } while (response != null && response.meta().pagination().next() != null);
+        log.info("Find {} post for author {} from Admin API", allPosts.size(), author);
         return allPosts;
     }
 
@@ -150,5 +153,62 @@ public class GhostService {
     public Post getAdminPostBySlug(String slug) {
         PostResponse response = adminApiClient.getPostBySlug(slug);
         return (response != null && !response.posts().isEmpty()) ? response.posts().get(0) : null;
+    }
+
+    public Post createAdminPost(PostInput post) {
+        if (post.title() == null || post.title().isBlank()) {
+            throw new IllegalArgumentException("Le titre est obligatoire pour créer un article.");
+        }
+        PostInput toCreate = post.status() == null
+                ? new PostInput(post.title(), post.html(), "draft", post.tags(), post.customExcerpt(),
+                post.featureImage(), post.featured(), post.metaTitle(), post.metaDescription(),
+                post.publishedAt(), null)
+                : post;
+        validateStatus(toCreate);
+        PostResponse response = adminApiClient.createPost(toCreate.withUpdatedAt(null));
+        return (response != null && !response.posts().isEmpty()) ? response.posts().get(0) : null;
+    }
+
+    public Post updateAdminPost(String id, PostInput changes) {
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("L'id de l'article est obligatoire pour une mise à jour.");
+        }
+        if (isEmpty(changes)) {
+            throw new IllegalArgumentException("Aucun champ à mettre à jour n'a été fourni.");
+        }
+        if (changes.title() != null && changes.title().isBlank()) {
+            throw new IllegalArgumentException("Le titre ne peut pas être vide.");
+        }
+        validateStatus(changes);
+
+        // Ghost exige le updated_at courant pour détecter les modifications concurrentes
+        PostResponse current = adminApiClient.getPostById(id);
+        if (current == null || current.posts() == null || current.posts().isEmpty()) {
+            throw new IllegalArgumentException("Aucun article trouvé pour l'id '%s'.".formatted(id));
+        }
+        OffsetDateTime updatedAt = current.posts().get(0).updatedAt();
+
+        PostResponse response = adminApiClient.updatePost(id, changes.withUpdatedAt(updatedAt));
+        return (response != null && !response.posts().isEmpty()) ? response.posts().get(0) : null;
+    }
+
+    private static void validateStatus(PostInput post) {
+        if (post.status() == null) {
+            return;
+        }
+        if (!ALLOWED_STATUSES.contains(post.status())) {
+            throw new IllegalArgumentException("Statut '%s' invalide. Valeurs possibles : %s."
+                    .formatted(post.status(), String.join(", ", ALLOWED_STATUSES)));
+        }
+        if ("scheduled".equals(post.status()) && post.publishedAt() == null) {
+            throw new IllegalArgumentException("Une date de publication (publishedAt) est obligatoire pour planifier un article.");
+        }
+    }
+
+    private static boolean isEmpty(PostInput post) {
+        return post == null || (post.title() == null && post.html() == null && post.status() == null
+                && post.tags() == null && post.customExcerpt() == null && post.featureImage() == null
+                && post.featured() == null && post.metaTitle() == null && post.metaDescription() == null
+                && post.publishedAt() == null);
     }
 }
